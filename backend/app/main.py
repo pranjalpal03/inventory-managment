@@ -180,6 +180,15 @@ async def seed_demo_admin() -> None:
 async def lifespan(app: FastAPI):
     settings = get_settings()
     await connect_to_mongo(settings)
+    
+    # Ensure MongoDB indexes exist
+    users_col = await get_users_collection()
+    await users_col.create_index("email", unique=True)
+    products_col = await get_products_collection()
+    await products_col.create_index("user_id")
+    sales_col = await get_sales_collection()
+    await sales_col.create_index("user_id")
+
     if settings.seed_demo_admin:
         await seed_demo_admin()
     await migrate_legacy_user_scoping()

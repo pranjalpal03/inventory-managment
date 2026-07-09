@@ -56,20 +56,21 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   }, []);
 
   useEffect(() => {
-    if (!stored.token) {
+    const initialToken = localStorage.getItem(TOKEN_KEY);
+    if (!initialToken) {
       setIsLoading(false);
       return;
     }
 
     api
-      .getMe(stored.token)
+      .getMe(initialToken)
       .then((me) => {
         setUser(me);
         localStorage.setItem(USER_KEY, JSON.stringify(me));
       })
       .catch(() => logout())
       .finally(() => setIsLoading(false));
-  }, [logout, stored.token]);
+  }, [logout]);
 
   const login = useCallback(
     async (email: string, password: string) => {
