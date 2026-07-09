@@ -220,12 +220,13 @@ def create_app() -> FastAPI:
     @app.get("/api/health")
     async def health_check() -> dict:
         return {"status": "ok", "version": settings.app_version}
-    
 
     return app
-@app.get("/")
-async def root():
-    return {"message": "Smart Inventory Dashboard API is running"}
 
 
 app = create_app()
+
+
+@app.get("/")
+async def root() -> dict:
+    return {"message": "Smart Inventory Dashboard API is running"}
