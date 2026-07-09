@@ -161,10 +161,9 @@ async def seed_demo_admin() -> None:
     users_col = await get_users_collection()
     now = datetime.now(timezone.utc)
     await users_col.update_one(
-        {"email": settings.demo_admin_email.lower()},
+        {"_id": ADMIN_USER_ID},
         {
             "$setOnInsert": {
-                "_id": ADMIN_USER_ID,
                 "email": settings.demo_admin_email.lower(),
                 "full_name": settings.demo_admin_name,
                 "password_hash": hash_password(settings.demo_admin_password),
