@@ -29,6 +29,26 @@ class Settings(BaseSettings):
         default="mongodb://localhost:27017",
         description="MongoDB connection URI (Motor async driver).",
     )
+
+    @field_validator("mongodb_uri")
+    @classmethod
+    def validate_mongodb_uri(cls, value: str) -> str:
+        uri = value.strip()
+        placeholders = (
+            "REPLACE_ATLAS",
+            "<user>",
+            "<password>",
+            "<cluster>",
+            "GENERATE_",
+        )
+        if any(token in uri for token in placeholders):
+            raise ValueError(
+                "MONGODB_URI contains placeholder values. "
+                "Set a real MongoDB Atlas connection string in Render env vars."
+            )
+        if uri.startswith("mongodb+srv://") and "@" not in uri.split("mongodb+srv://", 1)[1]:
+            raise ValueError("MONGODB_URI is missing username or password.")
+        return uri
     mongodb_db_name: str = Field(
         default="smart_inventory",
         description="Target database name for inventory and sales collections.",

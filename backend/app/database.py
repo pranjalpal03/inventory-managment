@@ -39,7 +39,18 @@ async def connect_to_mongo(settings: Settings | None = None) -> None:
     """Verify connectivity and initialize the database handle."""
     cfg = settings or get_settings()
     db = get_database(cfg)
-    await db.command("ping")
+    try:
+        await db.command("ping")
+    except Exception as exc:
+        message = str(exc).lower()
+        if "bad auth" in message or "authentication failed" in message:
+            raise RuntimeError(
+                "MongoDB authentication failed. Check MONGODB_URI on Render: "
+                "use a Database Access user (not Atlas login email), "
+                "URL-encode special characters in the password, and allow "
+                "0.0.0.0/0 under Network Access."
+            ) from exc
+        raise
 
 
 async def close_mongo_connection() -> None:
