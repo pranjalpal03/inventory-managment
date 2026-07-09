@@ -12,7 +12,7 @@ class Settings(BaseSettings):
     """Centralized runtime configuration for the FastAPI backend."""
 
     model_config = SettingsConfigDict(
-        env_file=".env",
+        env_file=(".env", ".env.production"),
         env_file_encoding="utf-8",
         case_sensitive=False,
         extra="ignore",
@@ -81,6 +81,15 @@ class Settings(BaseSettings):
     dead_stock_lookback_days: int = Field(
         default=30,
         description="Window (days) with zero sales to classify dead stock.",
+    )
+
+    seed_demo_data: bool = Field(
+        default=True,
+        description="Seed sample products/sales on startup (disable in production).",
+    )
+    seed_demo_admin: bool = Field(
+        default=True,
+        description="Ensure demo admin account exists on startup.",
     )
 
 

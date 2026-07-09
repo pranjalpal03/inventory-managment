@@ -181,9 +181,11 @@ async def seed_demo_admin() -> None:
 async def lifespan(app: FastAPI):
     settings = get_settings()
     await connect_to_mongo(settings)
-    await seed_demo_admin()
+    if settings.seed_demo_admin:
+        await seed_demo_admin()
     await migrate_legacy_user_scoping()
-    await seed_demo_data()
+    if settings.seed_demo_data:
+        await seed_demo_data()
     logger.info("Connected to MongoDB: %s", settings.mongodb_db_name)
     yield
     await close_mongo_connection()

@@ -1,0 +1,10 @@
+[build]
+builder = "DOCKERFILE"
+dockerfilePath = "backend/Dockerfile"
+
+[deploy]
+healthcheckPath = "/api/health"
+healthcheckTimeout = 120
+restartPolicyType = "ON_FAILURE"
+
+# Set in Railway dashboard: MONGODB_URI, JWT_SECRET, DEMO_ADMIN_PASSWORD, CORS_ORIGINS

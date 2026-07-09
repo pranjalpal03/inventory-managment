@@ -1,0 +1,52 @@
+# Render Blueprint — https://render.com/docs/blueprint-spec
+# Deploy: connect GitHub repo → New Blueprint → select render.yaml
+#
+# Before deploy, set these secrets in the Render dashboard:
+#   MONGODB_URI, JWT_SECRET, DEMO_ADMIN_PASSWORD, CORS_ORIGINS
+
+services:
+  - type: web
+    name: smart-inventory-api
+    runtime: docker
+    rootDir: backend
+    dockerfilePath: ./Dockerfile
+    plan: free
+    healthCheckPath: /api/health
+    envVars:
+      - key: MONGODB_URI
+        sync: false
+      - key: MONGODB_DB_NAME
+        value: smart_inventory
+      - key: JWT_SECRET
+        sync: false
+      - key: JWT_ALGORITHM
+        value: HS256
+      - key: JWT_EXPIRE_MINUTES
+        value: "480"
+      - key: DEMO_ADMIN_EMAIL
+        value: admin@inventory.com
+      - key: DEMO_ADMIN_PASSWORD
+        sync: false
+      - key: DEMO_ADMIN_NAME
+        value: Inventory Admin
+      - key: CORS_ORIGINS
+        sync: false
+      - key: DEBUG
+        value: "false"
+      - key: SEED_DEMO_DATA
+        value: "false"
+      - key: SEED_DEMO_ADMIN
+        value: "true"
+
+  - type: web
+    name: smart-inventory-dashboard
+    runtime: static
+    rootDir: frontend
+    buildCommand: npm ci && VITE_API_BASE=https://$API_HOST/api npm run build
+    staticPublishPath: ./dist
+    envVars:
+      - key: API_HOST
+        fromService:
+          type: web
+          name: smart-inventory-api
+          property: host

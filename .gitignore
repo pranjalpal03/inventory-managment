@@ -1,0 +1,31 @@
+# Smart Inventory Dashboard — gitignore
+
+# Secrets (never commit)
+.env
+.env.production
+.env.local
+.env.*.local
+backend/.env
+
+# Dependencies & build
+node_modules/
+frontend/dist/
+backend/__pycache__/
+backend/**/__pycache__/
+*.pyc
+.venv/
+venv/
+
+# IDE & OS
+.idea/
+.vscode/
+*.swp
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+npm-debug.log*
+
+# Docker
+.docker/

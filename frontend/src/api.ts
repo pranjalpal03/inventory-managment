@@ -1,6 +1,6 @@
 import { getStoredToken } from "./context/AuthContext";
 
-const API_BASE = "/api";
+const API_BASE = (import.meta.env.VITE_API_BASE as string) || "/api";
 
 function parseErrorDetail(body: unknown): string {
   if (!body || typeof body !== "object") return "Request failed";
